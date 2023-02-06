@@ -1,30 +1,50 @@
+import pandas as pd
 import numpy as np
+from scipy import stats
 import matplotlib.pyplot as plt
 
-# Create some mock data
-U = np.array([8.66, 8.75, 8.83, 8.86, 8.89, 8.92, 0.727, 0.701, 0.723, 0.749, 0.781, 0.835])
-I = np.array([1,2,5,10,20,50,100,200,500,1000,2000,5000])
+
+#Daten einlesen
+data=pd.read_csv("../Aufgabe 1/data/data.csv")
+
+#Ausgabe der Urlisten
+for i in data.columns:
+    data[i].to_csv("../Aufgabe 1/data/urliste_"+i+".csv", header=False, index=False)
+
+#Ausgabe der Ranglisten
+data["Jahr"].sort_values(ascending=False).to_csv("../Aufgabe 1/data/Rangliste_Jahr.csv", header=False, index=False)
+
+data["Monat"].sort_values(ascending=False).to_csv("../Aufgabe 1/data/Rangliste_Monat.csv", header=False, index=False)
+months = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", 
+          "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
+data['Monat'] = pd.Categorical(data['Monat'], categories=months, ordered=True)
+data["Monat"].sort_values(ascending=False).to_csv("../Aufgabe 1/data/Rangliste_Monat.csv", header=False, index=False)
+
+data["Verbraucherpreisindex insgesamt"].sort_values(ascending=False).to_csv("../Aufgabe 1/data/Rangliste_Verbraucherpreisindex insgesamt.csv", header=False, index=False)
 
 
-fig, ax1 = plt.subplots()
+#---R1.7---
+print("\nModus:")
+print(stats.mode(data["Verbraucherpreisindex insgesamt"], keepdims=True))
+print("\narithmetischer Mittelwert:")
+print(np.mean(data["Verbraucherpreisindex insgesamt"]))
+print("\nMedian:")
+print(np.median(data["Verbraucherpreisindex insgesamt"]))
 
-color = 'tab:red'
-ax1.set_xlabel(r'U in V')
-ax1.set_ylabel(r'i in $\mu A$', color=color)
-ax1.plot(U, I, '.--', color=color)
-ax1.tick_params(axis='y', labelcolor=color)
+#---R1.8---
+print("\nSpannweite:")
+print(data["Verbraucherpreisindex insgesamt"].max()- data["Verbraucherpreisindex insgesamt"].min())
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#---R1.9---
+print("\nmittlere Abweichung vom Median")
+print(np.median(np.absolute(data["Verbraucherpreisindex insgesamt"] - np.median(data["Verbraucherpreisindex insgesamt"]))))
 
-color = 'tab:blue'
-ax2.set_ylabel(r'i in $\mu A$', color=color)  # we already handled the x-label with ax1
-ax2.set_yscale('log')
-ax2.plot(U, I, '.--', color=color)
-ax2.tick_params(axis='y', labelcolor=color)
+#---R1.10---
+print("\nStichprobenvarianz")
+print( (1/(len(data["Verbraucherpreisindex insgesamt"])-1)) * sum(pow(data["Verbraucherpreisindex insgesamt"]-np.mean(data["Verbraucherpreisindex insgesamt"]),2)))
 
-plt.title('Vierschichtdiode in Vorwärtsrichtung')
+#---R1.11---
+print("\nVariationskoeffizient")#standardabweichung/ arithmetisches mittel
+print(np.std(data["Verbraucherpreisindex insgesamt"])/np.mean(data["Verbraucherpreisindex insgesamt"]))
 
-plt.grid(True)
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.show()
+#---R1.12---
