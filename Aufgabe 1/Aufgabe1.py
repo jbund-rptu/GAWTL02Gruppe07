@@ -48,3 +48,21 @@ print("\nVariationskoeffizient")#standardabweichung/ arithmetisches mittel
 print(np.std(data["Verbraucherpreisindex insgesamt"])/np.mean(data["Verbraucherpreisindex insgesamt"]))
 
 #---R1.12---
+"""
+plt.boxplot(data["Verbraucherpreisindex insgesamt"],
+                vert=False,
+                whis=(10,90)) # quartil beschriftung einfügen
+plt.text(np.percentile(data["Verbraucherpreisindex insgesamt"],10)-0.2,1.1,r'$Q_{ 0.1}$',rotation=45)
+plt.text(np.percentile(data["Verbraucherpreisindex insgesamt"],25)-0.05,1.1,r'$Q_{ 0.25}$',rotation=45)
+plt.text(np.percentile(data["Verbraucherpreisindex insgesamt"],75)-0.05,1.1,r'$Q_{ 0.75}$',rotation=45)
+plt.text(np.percentile(data["Verbraucherpreisindex insgesamt"],90)-0.7,1.1,r'$Q_{ 0.90}$',rotation=45)
+"""
+
+#---R1.13---
+x = pd.date_range( '2017-01-01','2022-09-01', freq='MS').tolist()
+print(len(x))
+print(len(data["Verbraucherpreisindex insgesamt"].reindex(index=data.index[::-1])))
+plt.scatter(x, data["Verbraucherpreisindex insgesamt"].reindex(index=data.index[::-1]))
+plt.ylabel("Verbrauchspreisindex in %")
+plt.xlabel("Zeit in Jahren")
+plt.show()
