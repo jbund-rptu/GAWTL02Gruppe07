@@ -59,6 +59,7 @@ plt.text(np.percentile(data["Verbraucherpreisindex insgesamt"],90)-0.7,1.1,r'$Q_
 """
 
 #---R1.13---
+"""
 x = pd.date_range( '2017-01-01','2022-09-01', freq='MS').tolist()
 print(len(x))
 print(len(data["Verbraucherpreisindex insgesamt"].reindex(index=data.index[::-1])))
@@ -66,3 +67,42 @@ plt.scatter(x, data["Verbraucherpreisindex insgesamt"].reindex(index=data.index[
 plt.ylabel("Verbrauchspreisindex in %")
 plt.xlabel("Zeit in Jahren")
 plt.show()
+"""
+
+#---R1.15---
+
+"""
+fig, ax = plt.subplots()
+
+# hide axes
+fig.patch.set_visible(False)
+ax.axis('off')
+ax.axis('tight')
+
+#df = pd.DataFrame(np.random.randn(10, 4), columns=list('ABCD'))
+quantile = pd.DataFrame(columns=['Quantil','Wert'])
+
+for i in range(1,10):
+    pd.concat([quantile,pd.DataFrame([i/10, np.percentile(data["Verbraucherpreisindex insgesamt"],i*10).round(decimals=1)])])
+
+for i in range(1,4):
+    quantile = quantile.append({'Quantil':i*0.25, 'Wert':np.percentile(data["Verbraucherpreisindex insgesamt"],i*25).round(decimals=1)}, ignore_index=True)
+
+print(quantile)
+quantile.sort_values(by=['Quantil'])
+print(quantile)
+ax.table(cellText=quantile.values, colLabels=quantile.columns, loc='center')
+
+fig.tight_layout()
+
+plt.show()
+"""
+quantile = pd.DataFrame(columns = ['Quantil','Wert'])
+
+for i in range(1,10):
+    a = [(i/10), np.percentile(data["Verbraucherpreisindex insgesamt"],i*10).round(decimals=1)]
+    new = pd.DataFrame([a], columns = quantile.columns)
+    print(new)
+    pd.concat([new, quantile], ignore_index=True)
+
+print(quantile)
